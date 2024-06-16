@@ -13,7 +13,7 @@ function Page() {
           Welcome to The Wild Oasis
         </h1>
 
-        <div className="space-y-8 aspect-square col-span-2">
+        <div className="space-y-8">
           <p>
             Where nature&apos;s beauty and comfortable living blend seamlessly.
             Hidden away in the heart of the Italian Dolomites, this is your
@@ -42,8 +42,8 @@ function Page() {
         />
       </div>
 
-      <div className="col-span-2">
-        <Image src={Image2} alt="Family that manages The Wild Oasis" />
+      <div className="relative aspect-square col-span-2">
+        <Image src={Image2} fill className="object-cover" placeholder="blur"  alt="Family that manages The Wild Oasis" />
       </div>
 
       <div className="col-span-3">
