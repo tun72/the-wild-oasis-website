@@ -34,10 +34,10 @@ export default function Page({ searchParams }) {
         <Filter />
       </div>
 
-      <Suspense fallback={<Spinner />} key={filter}>
+      {/* <Suspense fallback={<Spinner />} key={filter}>
         <CabinList filter={filter} />
         <ReservationReminder />
-      </Suspense>
+      </Suspense> */}
     </div>
   );
 }
