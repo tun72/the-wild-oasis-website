@@ -2,10 +2,19 @@ import Image1 from "@/public/about-1.jpg";
 
 import Image2 from "@/public/about-2.jpg";
 import Image from "next/image";
+import { getCabins } from "../_lib/data-service";
 export const metadata = {
   title: "About",
 };
-function Page() {
+
+export const revalidate = 8600;
+
+async function Page() {
+
+  const cabins = await getCabins();
+
+  const length = cabins.length;
+
   return (
     <div className="grid grid-cols-5 gap-x-24 gap-y-32 text-lg items-center">
       <div className="col-span-3">
@@ -22,7 +31,7 @@ function Page() {
             and enjoying simple pleasures with family.
           </p>
           <p>
-            Our 8 luxury cabins provide a cozy base, but the real freedom and
+            Our {length} luxury cabins provide a cozy base, but the real freedom and
             peace you&apos;ll find in the surrounding mountains. Wander through
             lush forests, breathe in the fresh air, and watch the stars twinkle
             above from the warmth of a campfire or your hot tub.
@@ -37,13 +46,19 @@ function Page() {
 
       <div className="col-span-2">
         <Image
-        src={Image1}
+          src={Image1}
           alt="Family sitting around a fire pit in front of cabin"
         />
       </div>
 
       <div className="relative aspect-square col-span-2">
-        <Image src={Image2} fill className="object-cover" placeholder="blur"  alt="Family that manages The Wild Oasis" />
+        <Image
+          src={Image2}
+          fill
+          className="object-cover"
+          placeholder="blur"
+          alt="Family that manages The Wild Oasis"
+        />
       </div>
 
       <div className="col-span-3">

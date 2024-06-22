@@ -1,9 +1,6 @@
 import ReservationCard from "./ReservationCard";
 
-export default function Page() {
-  // CHANGE
-  const bookings = [];
-
+export default function Page({ bookings }) {
   return (
     <div>
       {bookings.length === 0 ? (
