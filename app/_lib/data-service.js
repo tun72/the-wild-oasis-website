@@ -6,15 +6,19 @@ import { supabase } from "./supabase";
 // GET
 
 export async function getCabin(id) {
+  console.log(id);
   const { data, error } = await supabase
     .from("cabins")
     .select("*")
     .eq("id", id)
-    .single();
+
+    .maybeSingle();
+  // .single();
 
   // For testing
   // await new Promise((res) => setTimeout(res, 2000));
 
+  console.log(data);
   if (error) {
     console.error(error);
     notFound();
@@ -28,7 +32,7 @@ export async function getCabinPrice(id) {
     .from("cabins")
     .select("regularPrice, discount")
     .eq("id", id)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error(error);
@@ -61,8 +65,9 @@ export async function getGuest(email) {
     .from("guests")
     .select("*")
     .eq("email", email)
-    .single();
+    .maybeSingle();
 
+    console.log(data);
   // No error here! We handle the possibility of no guest in the sign in callback
   return data;
 }
@@ -72,8 +77,9 @@ export async function getBooking(id) {
     .from("bookings")
     .select("*")
     .eq("id", id)
-    .single();
+    .maybeSingle();
 
+    console.log(data);
   if (error) {
     console.error(error);
     throw new Error("Booking could not get loaded");
@@ -92,6 +98,7 @@ export async function getBookings(guestId) {
     .eq("guestId", guestId)
     .order("startDate");
 
+  console.log(data);
   if (error) {
     console.error(error);
     throw new Error("Bookings could not get loaded");
@@ -131,7 +138,7 @@ export async function getBookedDatesByCabinId(cabinId) {
 }
 
 export async function getSettings() {
-  const { data, error } = await supabase.from("settings").select("*").single();
+  const { data, error } = await supabase.from("settings").select("*").maybeSingle();
 
   // await new Promise((res) => setTimeout(res, 5000));
 

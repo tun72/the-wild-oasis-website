@@ -31,7 +31,6 @@ function RootLayout({ children }) {
             <ReservationProvider>{children}</ReservationProvider>
           </main>
         </div>
-        <footer>Copyright by The Wild Oasis</footer>
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
 import { supabase } from "./supabase";
 import { getBooking, getBookings } from "./data-service";
+import { redirect } from "next/navigation";
 
 export async function updateGuest(formData) {
   const session = await auth();
@@ -29,14 +30,42 @@ export async function updateGuest(formData) {
   revalidatePath("/account/profile");
 }
 
-export async function deleteReservation(bookingId) {
+export async function createBooking(bookingData, formData) {
+  const session = await auth();
+
+  if (!session) throw new Error("Need to login");
+
+  const newBooking = {
+    ...bookingData,
+    guestId: session.user.guestId,
+    newGuests: formData.get("numGuests"),
+    observations: formData.get("observations"),
+    extraPrice: 0,
+    totalPrice: bookingData.cabinPrice,
+    isPaid: false,
+    hasBreakfast: false,
+    status: "unconfirmed",
+  };
+
+  const { error } = await supabase.from("bookings").insert([newBooking]);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be created");
+  }
+
+  revalidatePath(`/cabins/${bookingData.cabinId}`);
+
+  redirect("/cabins/thankyou");
+}
+export async function deleteBooking(bookingId) {
   const session = await auth();
 
   if (!session) throw new Error("Need to login");
 
   const guestBookings = await getBookings(session.user.guestId);
 
-  const guestBookingIds = getBookings.map((booking) => booking.id);
+  const guestBookingIds = guestBookings.map((booking) => booking.id);
 
   if (!guestBookingIds.includes(bookingId)) {
     throw new Error("You are not belong to this reservations");
@@ -52,6 +81,45 @@ export async function deleteReservation(bookingId) {
 
   revalidatePath("/account/reservation");
 }
+
+export async function updateReservation(formData) {
+  const bookingId = Number(formData.get("bookingId"));
+  const session = await auth();
+
+  if (!session) throw new Error("Need to login");
+
+  const guestBookings = await getBookings(session.user.guestId);
+  const guestBookingIds = guestBookings.map((booking) => booking.id);
+
+  console.log(bookingId, guestBookingIds);
+
+  if (!guestBookingIds.includes(bookingId)) {
+    throw new Error("You are not belong to this reservations");
+  }
+  const updateData = {
+    numGuests: Number(formData.get("numGuests")),
+    observations: formData.get("observations").slice(0, 1000),
+  };
+
+  const { data, error } = await supabase
+    .from("bookings")
+    .update(updateData)
+    .eq("id", bookingId)
+    .select()
+    .maybeSingle();
+
+  console.log(data);
+  if (error) {
+    console.log(error);
+    throw new Error("Guest could not be updated");
+  }
+
+  revalidatePath(`/account/reservations/edit/${bookingId}`);
+  revalidatePath("/account/reservations");
+
+  return redirect("/account/reservations");
+}
+
 export async function signInAction() {
   await signIn("google", { redirectTo: "/account" });
 }

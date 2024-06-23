@@ -5,6 +5,8 @@ export default async  function Page() {
   // CHANGE
   const bookings = [];
   const session = await auth();
+  // console.log(session);
+  // const firstName = "dawdawd"
   const firstName = session?.user?.name?.split(" ").at(0)
 
 
