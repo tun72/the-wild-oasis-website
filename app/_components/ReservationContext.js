@@ -3,7 +3,7 @@ const { createContext, useState, useContext } = require("react");
 
 const ReservationContext = createContext();
 
-const initialState = { form: undefined, to: undefined };
+const initialState = { from: undefined, to: undefined };
 
 export function ReservationProvider({ children }) {
   const [range, setRange] = useState({ initialState });

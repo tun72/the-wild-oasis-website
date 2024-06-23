@@ -11,7 +11,7 @@ function ReservationForm({ cabin, user }) {
   const { range, resetRange } = useReservation();
   const { id, regularPrice, discount } = cabin;
 
-  const startDate = range.form;
+  const startDate = range.from;
   const endDate = range.to;
   const numNights = differenceInDays(endDate, startDate);
 
@@ -24,6 +24,8 @@ function ReservationForm({ cabin, user }) {
     cabinPrice,
     cabinId: id,
   };
+
+  console.log(startDate, endDate);
 
   const createBookingWithData = createBooking.bind(null, bookingData);
 
@@ -81,6 +83,7 @@ function ReservationForm({ cabin, user }) {
             placeholder="Any pets, allergies, special requirements, etc.?"
           />
         </div>
+
 
         <div className="flex justify-end items-center gap-6">
           {!(startDate && endDate) ? (
